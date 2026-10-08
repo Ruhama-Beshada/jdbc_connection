@@ -18,6 +18,12 @@ public class JDBCDemo {
 
             // Task 1: create database and table
             createDatabaseAndTable();
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, username, password)) {
+                System.out.println("Established Connection to StudentsDB");
+
+                insertSampleData(conn);        // Task 2
+            }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
@@ -45,6 +51,42 @@ public class JDBCDemo {
                     + "lastname VARCHAR(255), "
                     + "grade INT)");
             System.out.println("Task 1: Database and table created.");
+        }
+    }
+
+    // Task 2
+    private static void insertSampleData(Connection conn) throws SQLException {
+        String sql = "INSERT INTO students (id, firstname, lastname, grade) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            // Single row example
+            ps.setInt(1, 1);
+            ps.setString(2, "John");
+            ps.setString(3, "Doe");
+            ps.setInt(4, 90);
+            ps.executeUpdate();
+
+            // Ten more rows
+            String[][] data = {
+                    {"Aster", "Nega", "85"},
+                    {"Jemal", "Edris", "78"},
+                    {"Haile", "Anaol", "92"},
+                    {"Teddy", "Habtu", "66"},
+                    {"Teklay", "Michael", "88"},
+                    {"Johny", "Deep", "74"},
+                    {"Memar", "Alebachew", "95"},
+                    {"Sara", "Tesfaye", "81"},
+                    {"Dawit", "Bekele", "69"},
+                    {"Meron", "Kebede", "77"}
+            };
+            int id = 2;
+            for (String[] row : data) {
+                ps.setInt(1, id++);
+                ps.setString(2, row[0]);
+                ps.setString(3, row[1]);
+                ps.setInt(4, Integer.parseInt(row[2]));
+                ps.executeUpdate();
+            }
+            System.out.println("Task 2: Data inserted successfully.");
         }
     }
 }
