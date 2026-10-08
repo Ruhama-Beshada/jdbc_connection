@@ -25,6 +25,7 @@ public class JDBCDemo {
                 insertSampleData(conn);                 // Task 2
                 retrieveData(conn);                     // Task 3
                 updateStudentName(conn, 1, "Jonathan"); // Task 4
+                deleteStudent(conn, 2);                 // Task 5
             }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -108,6 +109,18 @@ public class JDBCDemo {
             System.out.println("Task 4: Rows updated: " + rows);
         }
         System.out.println("First five rows after update:");
+        printFirstFive(conn);
+    }
+
+    // Task 5
+    private static void deleteStudent(Connection conn, int id) throws SQLException {
+        String sql = "DELETE FROM students WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            int rows = ps.executeUpdate();
+            System.out.println("Task 5: Rows deleted: " + rows);
+        }
+        System.out.println("First five rows after delete:");
         printFirstFive(conn);
     }
 
