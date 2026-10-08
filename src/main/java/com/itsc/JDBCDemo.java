@@ -22,8 +22,9 @@ public class JDBCDemo {
             try (Connection conn = DriverManager.getConnection(DB_URL, username, password)) {
                 System.out.println("Established Connection to StudentsDB");
 
-                insertSampleData(conn);        // Task 2
-                retrieveData(conn);            // Task 3
+                insertSampleData(conn);                 // Task 2
+                retrieveData(conn);                     // Task 3
+                updateStudentName(conn, 1, "Jonathan"); // Task 4
             }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -94,6 +95,23 @@ public class JDBCDemo {
     // Task 3
     private static void retrieveData(Connection conn) throws SQLException {
         System.out.println("Task 3: First five rows:");
+        printFirstFive(conn);
+    }
+
+    // Task 4
+    private static void updateStudentName(Connection conn, int id, String newFirstName) throws SQLException {
+        String sql = "UPDATE students SET firstname = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newFirstName);
+            ps.setInt(2, id);
+            int rows = ps.executeUpdate();
+            System.out.println("Task 4: Rows updated: " + rows);
+        }
+        System.out.println("First five rows after update:");
+        printFirstFive(conn);
+    }
+
+    private static void printFirstFive(Connection conn) throws SQLException {
         try (Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery("SELECT * FROM students LIMIT 5")) {
             while (rs.next()) {
