@@ -23,6 +23,7 @@ public class JDBCDemo {
                 System.out.println("Established Connection to StudentsDB");
 
                 insertSampleData(conn);        // Task 2
+                retrieveData(conn);            // Task 3
             }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -87,6 +88,19 @@ public class JDBCDemo {
                 ps.executeUpdate();
             }
             System.out.println("Task 2: Data inserted successfully.");
+        }
+    }
+
+    // Task 3
+    private static void retrieveData(Connection conn) throws SQLException {
+        System.out.println("Task 3: First five rows:");
+        try (Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery("SELECT * FROM students LIMIT 5")) {
+            while (rs.next()) {
+                System.out.println("ID: " + rs.getInt("id")
+                        + ", Name: " + rs.getString("firstname") + " " + rs.getString("lastname")
+                        + ", Grade: " + rs.getInt("grade"));
+            }
         }
     }
 }
