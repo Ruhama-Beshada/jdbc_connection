@@ -26,6 +26,7 @@ public class JDBCDemo {
                 retrieveData(conn);                     // Task 3
                 updateStudentName(conn, 1, "Jonathan"); // Task 4
                 deleteStudent(conn, 2);                 // Task 5
+                calculateAverageGrade(conn);            // Task 6
             }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -122,6 +123,16 @@ public class JDBCDemo {
         }
         System.out.println("First five rows after delete:");
         printFirstFive(conn);
+    }
+
+    // Task 6
+    private static void calculateAverageGrade(Connection conn) throws SQLException {
+        try (Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery("SELECT AVG(grade) AS average_grade FROM students")) {
+            while (rs.next()) {
+                System.out.println("Task 6: Average Grade: " + rs.getDouble("average_grade"));
+            }
+        }
     }
 
     private static void printFirstFive(Connection conn) throws SQLException {
